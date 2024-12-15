@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin sinh viên</title>
+    <style>
+        .student-info {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+}
+
+.student-info td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.student-info td:first-child {
+    font-weight: bold;
+    width: 150px;
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thông tin cá nhân</h1>
+        <table class="student-info">
+    <tr>
+        <td><strong>Mã số sinh viên:</strong></td>
+        <td>{{ student[1] }}</td>
+    </tr>
+    <tr>
+        <td><strong>Ngành học:</strong></td>
+        <td>{{ student[2] }}</td>
+    </tr>
+    <tr>
+        <td><strong>Khoa:</strong></td>
+        <td>{{ student[3] }}</td>
+    </tr>
+    <tr>
+        <td><strong>Lớp:</strong></td>
+        <td>{{ student[4] }}</td>
+    </tr>
+    <tr>
+        <td><strong>Điểm toàn khóa:</strong></td>
+        <td>{{ student[5] }}</td>
+    </tr>
+</table>
+
+    </div>
+</body>
+</html>

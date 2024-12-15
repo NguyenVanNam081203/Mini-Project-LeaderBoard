@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Sinh Viên</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/merry.css') }}">
+</head>
+<body class="py-6 font-sans">
+
+    <div class="w-full h-full min-h-screen flex flex-col justify-between">
+        
+        <div class="snow-container"></div>
+
+    <!-- Container chính -->
+    <div class="container mx-auto px-6 sm:px-4 lg:px-6 max-w-7xl fade-in">
+
+        <!-- Tiêu đề -->
+        <h1 class="christmas-title text-3xl font-semibold text-center">Danh Sách Điểm Danh</h1>
+
+        <!-- Thanh hành động -->
+        <div class="flex justify-between items-center mb-4">
+            <button 
+                onclick="window.location.href='/dashboard'" 
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
+                Quay lại Dashboard
+            </button>
+            <div class="space-x-4">
+                <button 
+                    onclick="document.getElementById('top3-high-modal').classList.remove('hidden'); document.getElementById('top3-high-modal').classList.add('modal-enter')" 
+                    class="bg-green-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300">
+                    Top 3 Cao Nhất
+                </button>
+                <button 
+                    onclick="document.getElementById('top3-low-modal').classList.remove('hidden'); document.getElementById('top3-low-modal').classList.add('modal-enter')" 
+                    class="bg-red-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-red-700 transition-all duration-300">
+                    Top 3 Thấp Nhất
+                </button>
+            </div>
+        </div>
+
+        <!-- Bảng danh sách sinh viên -->
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full text-left">
+                <thead class="bg-blue-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-sm">STT</th>
+                        <th class="py-2 px-4 text-sm">Mã Sinh Viên</th>
+                        <th class="py-2 px-4 text-sm">Họ và Tên</th>
+                        <th class="py-2 px-4 text-sm">Lớp</th>
+                        <th class="py-2 px-4 text-sm">Điểm Project</th>
+                        <th class="py-2 px-4 text-sm">Vắng</th>
+                        <th class="py-2 px-4 text-sm">Phát Biểu</th>
+                        <th class="py-2 px-4 text-sm">Tổng Điểm</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for student in students %}
+                    <tr class="hover:bg-gray-100 transition-all duration-300">
+                        <td class="py-2 px-4 text-sm">{{ student[0] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[1] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[2] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[3] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[4] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[5] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[6] }}</td>
+                        <td class="py-2 px-4 text-sm font-semibold text-blue-600">{{ student[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phân trang -->
+        <div class="flex justify-between items-center mt-4">
+            <span class="christmas-title text-sm">Trang {{ page }} / {{ total_pages }}</span>
+            <div class="space-x-2">
+                {% if page > 1 %}
+                <a href="{{ url_for('sheet', page=page-1) }}" 
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition-all duration-300">
+                    Quay lại
+                </a>
+                {% endif %}
+                {% if page < total_pages %}
+                <a href="{{ url_for('sheet', page=page+1) }}" 
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition-all duration-300">
+                    Tiếp theo
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Top 3 Cao Nhất -->
+    <div id="top3-high-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white w-3/4 max-w-lg rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-center text-green-600 mb-4">Top 3 Cao Nhất</h2>
+            <table class="w-full text-left">
+                <thead class="bg-green-500 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-sm">STT</th>
+                        <th class="py-2 px-4 text-sm">Mã Sinh Viên</th>
+                        <th class="py-2 px-4 text-sm">Họ và Tên</th>
+                        <th class="py-2 px-4 text-sm">Tổng Điểm</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for student in top3_high %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-2 px-4 text-sm">{{ student[0] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[1] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[2] }}</td>
+                        <td class="py-2 px-4 text-sm text-green-600 font-semibold">{{ student[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center mt-4">
+                <button 
+                    onclick="document.getElementById('top3-high-modal').classList.add('hidden'); document.getElementById('top3-high-modal').classList.remove('modal-enter')" 
+                    class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition-all duration-300">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Top 3 Thấp Nhất -->
+    <div id="top3-low-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white w-3/4 max-w-lg rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-center text-red-600 mb-4">Top 3 Thấp Nhất</h2>
+            <table class="w-full text-left">
+                <thead class="bg-red-500 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-sm">STT</th>
+                        <th class="py-2 px-4 text-sm">Mã Sinh Viên</th>
+                        <th class="py-2 px-4 text-sm">Họ và Tên</th>
+                        <th class="py-2 px-4 text-sm">Tổng Điểm</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for student in top3_low %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-2 px-4 text-sm">{{ student[0] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[1] }}</td>
+                        <td class="py-2 px-4 text-sm">{{ student[2] }}</td>
+                        <td class="py-2 px-4 text-sm text-red-600 font-semibold">{{ student[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center mt-4">
+                <button 
+                    onclick="document.getElementById('top3-low-modal').classList.add('hidden'); document.getElementById('top3-low-modal').classList.remove('modal-enter')" 
+                    class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition-all duration-300">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/merry.js') }}"></script>
+</body>
+</html

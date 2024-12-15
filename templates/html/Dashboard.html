@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Sinh Viên</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/merry.css') }}">
+</head>
+<body class="bg-gray-100 font-sans flex items-center min-h-screen">
+    <div class="w-full h-full min-h-screen flex flex-col justify-between">
+
+        <!-- Phần Mừng Giáng Sinh (Merry Christmas) -->
+        <h1 class="christmas-title absolute top-4 left-1/2 transform -translate-x-1/2 text-3xl text-center z-10">
+            Merry Christmas
+        </h1>
+        
+        <div class="snow-container"></div>
+
+        <div class="santa-container">
+            <img
+                src="https://firebasestorage.googleapis.com/v0/b/webai-54992.appspot.com/o/santa.png?alt=media&token=a81ad9d6-4f75-498e-9ba4-3e28673c942f"
+                class="santa"
+                alt="Santa"
+            />
+        </div>
+        <div class="christmas-content">
+            <div class="christmas-tree">
+                <div class="tree">
+                    <div class="bells-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute top-0 right-0 flex items-center gap-4 p-4">
+            <span class="text-white font-medium">Xin chào {{data_user[0]}}</span>
+            <button 
+                onclick="document.getElementById('student_info_page').classList.remove('hidden')" 
+                class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition">
+                Xem thông tin
+            </button>
+            
+            <button 
+                id="logoutButton" 
+                class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
+            >
+                <a href="{{ url_for('logout') }}">Đăng Xuất</a>
+            </button>
+        </div>
+        
+        <div class="absolute top-0 left-0 flex items-center gap-4 p-4">
+            <button 
+                id="logoutButton" 
+                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                <a href="{{ url_for('sheet') }}">Bảng Sheet</a>
+            </button>
+        </div>
+        
+        <!-- Container chia thành 2 cột: form thêm sinh viên bên trái và bảng danh sách sinh viên bên phải -->
+        <div class="flex gap-8 w-full justify-center items-center h-screen ">
+
+            <!-- Phần Danh Sách Sinh Viên (bên phải) -->
+            <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6 text-center">LeaderBoard</h2>
+
+                <!-- Bảng sinh viên -->
+                <div class="overflow-x-auto bg-white shadow-lg rounded-lg mb-4">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="bg-blue-200 text-blue-600">
+                                <th class="px-4 py-2 text-left">Tên</th>
+                                <th class="px-4 py-2 text-left">Mã Sinh Viên</th>
+                                <th class="px-4 py-2 text-left">Thứ tự hạng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td class="px-4 py-2">{{ student[1] }}</td>
+                                <td class="px-4 py-2">{{ student[2] }}</td>
+                                <td class="px-4 py-2">{{ student[0] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center mt-4">
+                    <!-- Nút Trang Trước -->
+                    {% if page > 1 %}
+                    <a href="{{ url_for('backdashboard', page=page-1) }}" 
+                       class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
+                        Trang Trước
+                    </a>
+                    {% else %}
+                    <button 
+                        class="px-4 py-2 bg-blue-300 text-blue-500 rounded-md cursor-not-allowed" 
+                        disabled>
+                        Trang Trước
+                    </button>
+                    {% endif %}
+                    
+                    <!-- Hiển thị số trang hiện tại -->
+                    <span class="text-gray-700 font-semibold">Trang {{ page }} / {{ total_pages }}</span>
+                    
+                    <!-- Nút Trang Tiếp -->
+                    {% if page < total_pages %}
+                    <a href="{{ url_for('backdashboard', page=page+1) }}" 
+                       class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
+                        Trang Tiếp Theo
+                    </a>
+                    {% else %}
+                    <button 
+                        class="px-4 py-2 bg-blue-300 text-blue-500 rounded-md cursor-not-allowed" 
+                        disabled>
+                        Trang Tiếp Theo
+                    </button>
+                    {% endif %}
+                </div>
+                
+                
+            </div>
+
+        </div>
+        
+        <!-- Hidden section for student info -->
+        <div id="student_info_page" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Thông Tin Sinh Viên</h2>
+                
+                <div class="min-w-full table-auto mb-4">
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">Tên Sinh Viên:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[0] }}</div>
+                    </div>
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">Mã Sinh Viên:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[1] }}</div>
+                    </div>
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">Ngành:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[2] }}</div>
+                    </div>
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">Khoa:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[3] }}</div>
+                    </div>
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">Lớp:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[4] }}</div>
+                    </div>
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">Điểm Toàn Khóa:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[5] }}</div>
+                    </div>
+                    
+                    <!-- Thêm phần GPA ở đây -->
+                    <div class="flex justify-between items-center mb-6 whitespace-nowrap">
+                        <div class="font-semibold w-1/3 text-left">GPA:</div>
+                        <div class="w-2/3 pl-10">{{ data_user[6] }}</div>
+                    </div>                    
+                </div>
+                
+                
+                
+                <!-- Close button -->
+                <div class="flex justify-center mt-4">
+                    <button 
+                        onclick="document.getElementById('student_info_page').classList.add('hidden')" 
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="snow"></div>
+    </div>
+
+<script src="{{ url_for('static', filename='js/merry.js') }}"></script>
+
+</body>
+</html>

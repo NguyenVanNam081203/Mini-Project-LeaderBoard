@@ -1,0 +1,27 @@
+docker cp "D:\Hệ thống kinh doanh thông minh\LeaderBoardAll\students.db" superset_app:/app/students.db
+
+docker exec -it superset_app bash
+ls /app
+
+superset shell
+
+from superset import db
+from superset.models.core import Database
+
+try:
+    # Thay đổi tên cơ sở dữ liệu và đường dẫn file cho đúng
+    sqlite_db = Database(
+        database_name="students",  # Đổi thành "students" thay vì "leaderboard"
+        sqlalchemy_uri="sqlite:////app/students.db"  # Đảm bảo sử dụng đúng đường dẫn đến students.db
+    )
+
+    # Thêm cơ sở dữ liệu vào session và commit
+    db.session.add(sqlite_db)
+    db.session.commit()
+
+    print("Database added successfully!")  # Thông báo thành công
+
+except Exception as e:
+    # Nếu có lỗi, rollback và thông báo lỗi
+    db.session.rollback()
+    print(f"Failed to add database: {str(e)}")  # Thông báo thất bại
